@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rails-app
+  template:
+    metadata:
+      labels:
+        app: rails-app
+    spec:
+      containers:
+        - name: rails-app
+          image: devops-web:latest # Replace with your image repo if pushing to registry
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: postgres://postgres:password@postgres:5432/openflights_development
+          # Uncomment if you use Rails master key
+          # volumeMounts:
+          #   - name: rails-master-key
+          #     mountPath: /app/config/master.key
+          #     subPath: master.key
+      # volumes:
+      #   - name: rails-master-key
+      #     secret:
+      #       secretName: rails-master-key 

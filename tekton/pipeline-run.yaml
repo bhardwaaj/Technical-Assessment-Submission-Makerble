@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: open-flights-build-push-run
+spec:
+  pipelineRef:
+    name: open-flights-build-push
+  params:
+    - name: repo-url
+      value: https://github.com/zayneio/open-flights.git
+    - name: image-url
+      value: docker.io/<your-dockerhub-username>/open-flights:latest
+  workspaces:
+    - name: shared-data
+      emptyDir: {}
+    - name: docker-credentials
+      secret:
+        secretName: dockerhub-secret 

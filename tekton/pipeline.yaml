@@ -1,0 +1,46 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: open-flights-build-push
+spec:
+  workspaces:
+    - name: shared-data
+    - name: docker-credentials
+  params:
+    - name: repo-url
+      type: string
+    - name: image-url
+      type: string
+  tasks:
+    - name: clone-repo
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+      workspaces:
+        - name: output
+          workspace: shared-data
+    - name: build-and-push
+      runAfter:
+        - clone-repo
+      taskRef:
+        name: kaniko
+        kind: ClusterTask
+      params:
+        - name: IMAGE
+          value: $(params.image-url)
+        - name: DOCKERFILE
+          value: ./Dockerfile
+        - name: CONTEXT
+          value: $(workspaces.shared-data.path)
+      workspaces:
+        - name: source
+          workspace: shared-data
+        - name: dockerconfig
+          workspace: docker-credentials 
