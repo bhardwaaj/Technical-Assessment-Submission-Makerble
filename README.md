@@ -69,6 +69,5 @@ This project demonstrates a full DevOps workflow for deploying the [open-flights
 ---
 
 ## Notes
-- Do **not** commit any real secrets or credentials.
 - For more details on each step, see the README in each subdirectory.
 - For troubleshooting, see the official docs for [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) and [Tekton](https://tekton.dev/docs/). 
